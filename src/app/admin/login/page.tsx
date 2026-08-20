@@ -1,19 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Zap, Loader2, AlertCircle, CheckCircle, Lock } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [attempts, setAttempts] = useState(0);
-  const router = useRouter();
-
   const [successMessage, setSuccessMessage] = useState('');
+  const [attempts, setAttempts] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,42 +24,27 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const supabase = createClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      // Call server-side API route — sets HTTP-only cookie reliably
+      const res = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (authError) {
-        // Fallback for admin credentials
-        if (email === 'admin@2mka.com' && password === 'Admin123456!') {
-          document.cookie = "admin_auth=true; path=/; max-age=86400";
-          setSuccessMessage('Connexion réussie ! Redirection...');
-          setTimeout(() => {
-            window.location.href = '/admin';
-          }, 500);
-          return;
-        }
+      const data = await res.json();
 
+      if (!res.ok || !data.success) {
         setAttempts((prev) => prev + 1);
-        setError('Identifiants incorrects.');
+        setError(data.error || 'Identifiants incorrects.');
         return;
       }
 
+      // Success — show message then redirect
       setSuccessMessage('Connexion réussie ! Redirection...');
       setTimeout(() => {
         window.location.href = '/admin';
-      }, 500);
+      }, 600);
     } catch {
-      // Fallback check
-      if (email === 'admin@2mka.com' && password === 'Admin123456!') {
-        document.cookie = "admin_auth=true; path=/; max-age=86400";
-        setSuccessMessage('Connexion réussie ! Redirection...');
-        setTimeout(() => {
-          window.location.href = '/admin';
-        }, 500);
-        return;
-      }
       setError('Une erreur est survenue. Veuillez réessayer.');
     } finally {
       setLoading(false);
@@ -81,7 +62,7 @@ export default function AdminLoginPage() {
             <h1 className="text-2xl font-bold font-[family-name:var(--font-heading)]">
               Administration
             </h1>
-            <p className="text-text-muted text-sm mt-2">Espace réservé à l'administrateur</p>
+            <p className="text-text-muted text-sm mt-2">Espace réservé à l&apos;administrateur</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
