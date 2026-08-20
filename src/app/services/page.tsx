@@ -134,7 +134,7 @@ export default function ServicesPage() {
       {/* CTA */}
       <section className="py-20 px-4">
         <ScrollReveal>
-          <div className="max-w-4xl mx-auto rounded-2xl p-12 text-center" style={{ background: 'linear-gradient(135deg, #EA580C, #F97316, #EAB308)' }}>
+          <div className="max-w-4xl mx-auto rounded-2xl p-8 sm:p-12 text-center" style={{ background: 'linear-gradient(135deg, #EA580C, #F97316, #EAB308)' }}>
             <h2 className="text-3xl sm:text-4xl font-bold text-white font-[family-name:var(--font-heading)] mb-4">
               Demandez votre devis gratuit
             </h2>
