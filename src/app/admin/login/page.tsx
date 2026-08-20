@@ -40,9 +40,8 @@ export default function AdminLoginPage() {
           document.cookie = "admin_auth=true; path=/; max-age=86400";
           setSuccessMessage('Connexion réussie ! Redirection...');
           setTimeout(() => {
-            router.push('/admin');
-            router.refresh();
-          }, 1000);
+            window.location.href = '/admin';
+          }, 500);
           return;
         }
 
@@ -53,18 +52,16 @@ export default function AdminLoginPage() {
 
       setSuccessMessage('Connexion réussie ! Redirection...');
       setTimeout(() => {
-        router.push('/admin');
-        router.refresh();
-      }, 1000);
+        window.location.href = '/admin';
+      }, 500);
     } catch {
       // Fallback check
       if (email === 'admin@2mka.com' && password === 'Admin123456!') {
         document.cookie = "admin_auth=true; path=/; max-age=86400";
         setSuccessMessage('Connexion réussie ! Redirection...');
         setTimeout(() => {
-          router.push('/admin');
-          router.refresh();
-        }, 1000);
+          window.location.href = '/admin';
+        }, 500);
         return;
       }
       setError('Une erreur est survenue. Veuillez réessayer.');
