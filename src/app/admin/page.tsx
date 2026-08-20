@@ -39,8 +39,8 @@ export default function AdminDashboard() {
   }, [fetchData]);
 
   const handleLogout = async () => {
-    document.cookie = "admin_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    await supabase.auth.signOut();
+    // Call server-side API to clear HTTP-only cookie
+    await fetch('/api/admin-logout', { method: 'POST' });
     window.location.href = '/admin/login';
   };
 
